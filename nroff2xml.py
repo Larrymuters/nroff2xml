@@ -115,7 +115,7 @@ class Nroff2Xml:
         with open(infile) as f:
             self.nroff = f.readlines()
 
-        print("Read %d lines from %s file." % (len(self.nroff), infile))
+        print("Read {0:d} lines from {1!s} file.".format(len(self.nroff), infile))
 
     """
     Starts a new section. Closes any open <t> tag before adding new <section>
@@ -123,7 +123,7 @@ class Nroff2Xml:
     """
     def startSection(self, lineno, section, section_title):
         self.sections_list.append([section, section_title, lineno])
-        print("Starting section %s (%s) in line %d." % (section, section_title, lineno))
+        print("Starting section {0!s} ({1!s}) in line {2:d}.".format(section, section_title, lineno))
 
         if self.t_open:
             self.xml += "</t>\n"
@@ -276,7 +276,7 @@ class Nroff2Xml:
                 if m is None:
                     continue
                 else:
-                    print("References start in line %d" % lineno)
+                    print("References start in line {0:d}".format(lineno))
                     in_references = True
                     continue
 
@@ -284,13 +284,13 @@ class Nroff2Xml:
                 m = references_end1_re.match(line)
                 if m is not None:
                     in_references = False
-                    print("References end in line %d" % lineno)
+                    print("References end in line {0:d}".format(lineno))
                     break
 
                 m = references_end2_re.match(line)
                 if m is not None:
                     in_references = False
-                    print("References end in line %d" % lineno)
+                    print("References end in line {0:d}".format(lineno))
                     break
 
             # ignore nroff control sequences
@@ -312,10 +312,10 @@ class Nroff2Xml:
                 continue
 
 
-        print("Found %d references." % len(self.references))
+        print("Found {0:d} references.".format(len(self.references)))
 
         for key, value in self.references.items():
-            print("Reference %s [%s]" % (key, value.text))
+            print("Reference {0!s} [{1!s}]".format(key, value.text))
 
 
     """
@@ -354,7 +354,7 @@ class Nroff2Xml:
             if dotti0_re.search(line):
                 if in_toc:
                     in_toc = False
-                    print("Skipping table of contents (lines %d-%d)" % (toc_line_begin, lineno))
+                    print("Skipping table of contents (lines {0:d}-{1:d})".format(toc_line_begin, lineno))
                 continue
 
             if toc_re.search(line):
@@ -404,13 +404,13 @@ class Nroff2Xml:
                 section_title = s.groups()[4]
 
                 if level == 1:
-                    section = ("%d" % section_lv1)
+                    section = ("{0:d}".format(section_lv1))
                 if level == 2:
-                    section = ("%d.%d" % (section_lv1, section_lv2))
+                    section = ("{0:d}.{1:d}".format(section_lv1, section_lv2))
                 if level == 3:
-                    section = ("%d.%d.%d" % (section_lv1, section_lv2, section_lv3))
+                    section = ("{0:d}.{1:d}.{2:d}".format(section_lv1, section_lv2, section_lv3))
                 if level == 4:
-                    section = ("%d.%d.%d.%d" % (section_lv1, section_lv2, section_lv3, section_lv4))
+                    section = ("{0:d}.{1:d}.{2:d}.{3:d}".format(section_lv1, section_lv2, section_lv3, section_lv4))
 
                 if level > len(self.sections_list):
                     self.startSection(lineno, section, section_title)
@@ -484,7 +484,7 @@ class Nroff2Xml:
     """
     def writeXml(self, outfile):
 
-        print("Writing XML output (%d bytes) to %s" % (len(self.xml), outfile))
+        print("Writing XML output ({0:d} bytes) to {1!s}".format(len(self.xml), outfile))
 
         f = open(outfile, "w")
 
